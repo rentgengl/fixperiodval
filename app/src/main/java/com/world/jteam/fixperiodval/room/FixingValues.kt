@@ -5,10 +5,12 @@ import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
 @Entity
-data class FixingValues(
-    @PrimaryKey(autoGenerate = true) val id: Int,
-    var fixingId: Int,
-    var indicatorId: Int,
-    var value: Long,
-    @Ignore val unit: String
-)
+class FixingValues {
+    @PrimaryKey(autoGenerate = true)
+    var id: Int = -1
+    var fixingId: Int? = null
+    var indicatorId: Int? = null
+    var value: Long? = null
+    @Ignore
+    var unit: String? = null
+}

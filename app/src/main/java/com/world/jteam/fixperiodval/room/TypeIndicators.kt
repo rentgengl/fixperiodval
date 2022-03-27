@@ -6,6 +6,6 @@ import androidx.room.PrimaryKey
 @Entity
 data class TypeIndicators(
     @PrimaryKey(autoGenerate = true) val id: Int,
-    var typeId: Int,
-    var indicatorId: Int
+    var typeId: Int?,
+    var indicatorId: Int?
 )

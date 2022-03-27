@@ -7,6 +7,6 @@ import java.util.*
 @Entity
 data class Fixing(
     @PrimaryKey(autoGenerate = true) val id: Int,
-    var date: Date,
-    var typeId: Int
+    var date: Date?,
+    var typeId: Int?
 )
