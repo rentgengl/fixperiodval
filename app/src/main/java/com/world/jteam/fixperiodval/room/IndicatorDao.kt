@@ -5,7 +5,7 @@ import androidx.room.*
 @Dao
 interface IndicatorDao {
     @Insert
-    fun insert(indicator: Indicator)
+    fun insert(indicator: Indicator): Long
 
     @Update
     fun update(indicator: Indicator)
@@ -15,4 +15,7 @@ interface IndicatorDao {
 
     @Query("SELECT * FROM Indicator WHERE id = :id")
     fun getIndicatorById(id: Int): Indicator
+
+    @Query("SELECT * FROM Indicator")
+    fun getAllIndicator(): List<Indicator>
 }

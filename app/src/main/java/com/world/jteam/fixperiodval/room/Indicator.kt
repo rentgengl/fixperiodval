@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Indicator(
-    @PrimaryKey(autoGenerate = true) val id: Int,
-    val name: String?,
-    val unit: String?
+    @PrimaryKey(autoGenerate = true) var id: Int,
+    var name: String?,
+    var unit: String?
 )
