@@ -29,7 +29,7 @@ class IndicatorActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.indicatorRecyclerView.layoutManager = LinearLayoutManager(this)
-        binding.indicatorRecyclerView.adapter = IndicatorRecycleViewAdapter(indicatorList)
+        binding.indicatorRecyclerView.adapter = IndicatorRecycleViewAdapter(indicatorList,binding.indicatorRecyclerView)
 
         reloadIndicatorList()
     }
@@ -51,6 +51,11 @@ class IndicatorActivity : AppCompatActivity() {
 
             indicators?.forEach {i -> indicatorList.add(i) }
 
+            if (indicatorList.size == 0){
+                val emptyIndicator = Indicator(0, "", "")
+                indicatorList.add(emptyIndicator)
+            }
+
             binding.indicatorRecyclerView.adapter?.notifyDataSetChanged()
 
             binding.addIndicatorButton.isEnabled = true
@@ -65,15 +70,16 @@ class IndicatorActivity : AppCompatActivity() {
                 val indicatorDao = App.instance.db.IndicatorDao()
 
                 val indicator = Indicator(0, "", "")
-                val id = indicatorDao.insert(indicator)
-                indicator.id = id.toInt()
+                indicatorDao.insertIndicator(indicator)
 
                 return@withContext indicator
             }
 
             indicatorList.add(indicator)
 
-            binding.indicatorRecyclerView.adapter?.notifyItemInserted(indicatorList.size)
+            val pos = indicatorList.lastIndex
+
+            binding.indicatorRecyclerView.adapter?.notifyItemInserted(pos)
         }
     }
 
@@ -88,7 +94,16 @@ class IndicatorActivity : AppCompatActivity() {
 
                 indicatorViewHolder.currentIndicator?.let { indicator ->
                     indicatorList.remove(indicator)
-                    binding.indicatorRecyclerView.adapter?.notifyItemRemoved(viewHolder.adapterPosition)
+
+
+                    if(indicatorList.size == 0){
+                        val emptyIndicator = Indicator(0, "", "")
+                        indicatorList.add(emptyIndicator)
+
+                        binding.indicatorRecyclerView.adapter?.notifyDataSetChanged()
+                    } else {
+                        binding.indicatorRecyclerView.adapter?.notifyItemRemoved(viewHolder.adapterPosition)
+                    }
 
                     lifecycleScope.launch(Dispatchers.IO) {
                         val indicatorDao = App.instance.db.IndicatorDao()

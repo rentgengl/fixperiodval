@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.widget.doAfterTextChanged
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
@@ -16,8 +17,14 @@ import com.world.jteam.fixperiodval.room.Indicator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class IndicatorRecycleViewAdapter(private val indicatorList:MutableList<Indicator>)
+class IndicatorRecycleViewAdapter(private val indicatorList:MutableList<Indicator>, private val indicatorRecyclerView: RecyclerView)
         : RecyclerView.Adapter<IndicatorRecycleViewAdapter.IndicatorViewHolder>(){
+
+    init {
+        registerAdapterDataObserver(IndicatorDataObserver(indicatorRecyclerView))
+    }
+
+    var insertedPos: Int? = null
 
     class IndicatorViewHolder(indicatorItemBinding: ActivityIndicatorRecyclerviewItemBinding)
         : RecyclerView.ViewHolder(indicatorItemBinding.root) {
@@ -31,14 +38,18 @@ class IndicatorRecycleViewAdapter(private val indicatorList:MutableList<Indicato
         private val viewFocusChangedLambda = { view: View, focused: Boolean ->
 
             if (!focused && focusedViewChange) {
-
-                binding.root.findViewTreeLifecycleOwner()!!.lifecycleScope.launch(Dispatchers.IO) {
+                val lifeCycleOwner = (binding.root.context as? LifecycleOwner)
+                lifeCycleOwner!!.lifecycleScope.launch(Dispatchers.IO) {
                     val indicatorDao = App.instance.db.IndicatorDao()
 
                     currentIndicator!!.name = binding.indicatorName.text.toString()
                     currentIndicator!!.unit = binding.indicatorUnit.text.toString()
 
-                    indicatorDao.update(currentIndicator!!)
+                    if (currentIndicator!!.id == 0){
+                        indicatorDao.insertIndicator(currentIndicator!!)
+                    } else {
+                        indicatorDao.update(currentIndicator!!)
+                    }
                 }
             }
 
@@ -60,10 +71,23 @@ class IndicatorRecycleViewAdapter(private val indicatorList:MutableList<Indicato
 
         private val editableFactory = Editable.Factory.getInstance()
 
-        fun bind(indicator: Indicator) {
+        fun bind(indicator: Indicator, isFocus: Boolean) {
             currentIndicator = indicator
             binding.indicatorName.text = editableFactory.newEditable(currentIndicator!!.name)
             binding.indicatorUnit.text =  editableFactory.newEditable(currentIndicator!!.unit)
+
+            if (isFocus){
+                binding.indicatorName.requestFocus()
+            }
+        }
+    }
+
+    class IndicatorDataObserver(private val indicatorRecyclerView: RecyclerView): RecyclerView.AdapterDataObserver(){
+        override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+            super.onItemRangeInserted(positionStart, itemCount)
+
+            (indicatorRecyclerView.adapter as? IndicatorRecycleViewAdapter)?.insertedPos = positionStart
+            indicatorRecyclerView.scrollToPosition(positionStart)
         }
     }
 
@@ -76,10 +100,14 @@ class IndicatorRecycleViewAdapter(private val indicatorList:MutableList<Indicato
 
     override fun onBindViewHolder(holder: IndicatorViewHolder, position: Int) {
         val indicator = indicatorList[position]
-        holder.bind(indicator)
+        holder.bind(indicator, position == insertedPos)
+
+        if (position == insertedPos) insertedPos = null
+
     }
 
     override fun getItemCount(): Int {
         return indicatorList.count()
     }
+
 }

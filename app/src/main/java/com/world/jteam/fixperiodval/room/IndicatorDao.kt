@@ -18,4 +18,9 @@ interface IndicatorDao {
 
     @Query("SELECT * FROM Indicator")
     fun getAllIndicator(): List<Indicator>
+
+    fun insertIndicator(indicator: Indicator){
+        val id = insert(indicator)
+        indicator.id = id.toInt()
+    }
 }
