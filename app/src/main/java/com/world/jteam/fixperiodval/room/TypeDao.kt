@@ -21,33 +21,30 @@ interface TypeDao {
     @Delete
     fun deleteIndicators(indicators: List<TypeIndicators>)
 
-    @Query("SELECT * FROM TypeIndicators WHERE typeId = :typeId")
-    fun selectTypeIndicatorsByType(typeId: Int): List<TypeIndicators>
+    @Query("DELETE FROM TypeIndicators WHERE typeId = :typeId")
+    fun deleteIndicatorsByTypeId(typeId: Int)
 
     //basic
     @Transaction
-    fun insertType(type: Type, indicators: List<TypeIndicators>){
-        val typeId = insert(type).toInt()
-
-        indicators.forEach {it.typeId = typeId}
-
-        insetIndicators(indicators)
+    fun insertType(typeObject: TypeObject){
+        val typeId = insert(typeObject.type).toInt()
+        typeObject.indicators.forEach {it.typeId = typeId}
+        insetIndicators(typeObject.indicators)
     }
 
     @Transaction
-    fun updateType(type: Type, indicators: List<TypeIndicators>){
-        update(type)
-
-        val indicatorsOld = selectTypeIndicatorsByType(type.id)
-        deleteIndicators(indicatorsOld)
-
-        insetIndicators(indicators)
+    fun updateType(typeObject: TypeObject){
+        update(typeObject.type)
+        deleteIndicatorsByTypeId(typeObject.type.id)
+        insetIndicators(typeObject.indicators)
     }
 
     @Transaction
-    fun deleteType(type: Type){
-        val indicators = selectTypeIndicatorsByType(type.id)
-        deleteIndicators(indicators)
-        delete(type)
+    fun deleteType(typeObject: TypeObject){
+        deleteIndicatorsByTypeId(typeObject.type.id)
+        delete(typeObject.type)
     }
+
+    @Query("SELECT * FROM Type")
+    fun getAllType(): List<Type>
 }
