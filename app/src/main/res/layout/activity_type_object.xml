@@ -28,4 +28,14 @@
         android:textSize="16sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/typeObjectName"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/typeIndicatorsRecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/typeObjectName"
+        tools:listitem="@layout/activity_type_indicators_recyclerview_item" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,5 +1,7 @@
 package com.world.jteam.fixperiodval.type
 
+import android.text.Editable
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -13,9 +15,11 @@ class TypeListRecycleViewAdapter(private val typeList:MutableList<Type>, private
         : RecyclerView.ViewHolder(typeItemBinding.root) {
 
         private val binding = typeItemBinding
+        private val editableFactory = Editable.Factory.getInstance()
 
         fun bind(type: Type) {
-            binding.typeName.text = type.name
+            binding.typeName.text = editableFactory.newEditable(type!!.name)
+            binding.typeName.inputType = InputType.TYPE_NULL
         }
     }
 
