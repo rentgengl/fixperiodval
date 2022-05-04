@@ -92,7 +92,7 @@ class IndicatorActivity : AppCompatActivity() {
 
             indicatorViewHolder?.let {viewHolder ->
 
-                indicatorViewHolder.currentIndicator?.let { indicator ->
+                viewHolder.currentIndicator?.let { indicator ->
                     indicatorList.remove(indicator)
 
 

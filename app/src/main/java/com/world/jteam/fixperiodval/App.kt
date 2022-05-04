@@ -14,7 +14,8 @@ class App: Application() {
         instance.db = Room.databaseBuilder(
             instance,
             AppDatabase::class.java, "fixperiodvaldb"
-        ).build()
+        ).fallbackToDestructiveMigration() //TODO убрать для релиза
+            .build()
     }
 
     companion object {

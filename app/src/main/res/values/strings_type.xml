@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="type_object_name_title">Имя</string>
+    <string name="type_object_ok_name">OK</string>
     <string name="type_name_hint">Имя</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.world.jteam.fixperiodval.room
 
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
@@ -8,11 +9,11 @@ import androidx.room.TypeConverters
     entities = [
         Indicator::class,
         Type::class,
-        TypeIndicators::class,
+        TypeIndicator::class,
         Fixing::class,
         FixingValues::class
                ],
-    version = 1
+    version = 2
 )
 @TypeConverters(DateConverter::class)
 abstract class AppDatabase: RoomDatabase() {

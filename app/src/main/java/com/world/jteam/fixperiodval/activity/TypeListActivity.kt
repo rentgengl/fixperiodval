@@ -75,7 +75,7 @@ class TypeListActivity : AppCompatActivity() {
 
     fun addTypeClick(view: View) {
         val intent = Intent(this,TypeObjectActivity::class.java)
-        intent.putExtra("id",0)
+        intent.putExtra("typeId",0)
 
         resultLauncher.launch(intent)
     }

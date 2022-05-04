@@ -15,9 +15,14 @@ class TypeIndicatorsRecycleViewAdapter(private val indicatorList:MutableList<Ind
         : RecyclerView.ViewHolder(typeIndicatorsItemBinding.root) {
 
         private val binding = typeIndicatorsItemBinding
+        var currentIndicator: Indicator? = null
+            get
+            private set
 
-        fun bind(type: Indicator) {
-            binding.checkTypeIndicator.text = type.name
+        fun bind(indicator: Indicator) {
+            currentIndicator = indicator
+            binding.checkTypeIndicator.text = currentIndicator!!.name
+
         }
     }
 

@@ -12,7 +12,7 @@ data class Type(
 )
 
 @Entity
-data class TypeIndicators(
+data class TypeIndicator(
     @PrimaryKey(autoGenerate = true) var id: Int,
     var typeId: Int?,
     var indicatorId: Int?
@@ -24,5 +24,5 @@ data class TypeObject(
         parentColumn = "id",
         entityColumn = "typeId"
     )
-    val indicators: List<TypeIndicators>
+    val typeIndicators: MutableList<TypeIndicator>
 )
